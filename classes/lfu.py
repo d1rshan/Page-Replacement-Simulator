@@ -74,7 +74,7 @@ class LFU_Frames(f.Frame):
         self.frame_current_page = page
         self.frame_current_page_age = 0
         self.frame_current_page_birth = index
-        self.page_frequency = 0
+        self.page_frequency = 1  # Fix: Set frequency to 1 (not 0)
         self.set_current_event(index, EventType.PAGE_REPLACEMENT, page)
 
 
