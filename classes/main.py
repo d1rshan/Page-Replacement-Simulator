@@ -2,11 +2,13 @@ import fifo as f
 import lfu as lf
 import lru as lr
 import hybrid as h
+import ml_based as ml
 import input_taker as i
 import os
 import matplotlib.pyplot as plt
 import numpy as np
 import time
+
 from tabulate import tabulate
 
 test = i.SequenceTaker("temp")
@@ -22,7 +24,9 @@ def menu():
     print("[2] LRU   - Least Recently Used")
     print("[3] LFU   - Least Frequently Used")
     print("[4] Hybrid - Our Optimal Implementation")
-    print("[5] Compare All Algorithms")
+    print("[5] ML Based - Machine Learning Prediction")
+    print("[6] Compare All Algorithms")
+
     print("\n[0] Exit")
     print()
 
@@ -39,13 +43,15 @@ def execute_algorithm(algorithm):
         instance = lf.LFU(test.sequence, test.frames, test.process_count)
     elif algorithm == "Hybrid":
         instance = h.Hybrid(test.sequence, test.frames, test.process_count)
+    elif algorithm == "ML":
+        instance = ml.MLBased(test.sequence, test.frames, test.process_count)
     end_time = time.time()
     
     exec_time = end_time - start_time
     return instance, exec_time
 
 def compare_algorithms():
-    algorithms = ["FIFO", "LRU", "LFU", "Hybrid"]
+    algorithms = ["FIFO", "LRU", "LFU", "Hybrid", "ML"]
     fault_rates, hit_rates, efficiencies, exec_times = [], [], [], []
     
     results = []
@@ -100,7 +106,8 @@ def main():
         "1": "FIFO",
         "2": "LRU",
         "3": "LFU",
-        "4": "Hybrid"
+        "4": "Hybrid",
+        "5": "ML",
     }
     
     while True:
@@ -113,7 +120,7 @@ def main():
             clear()
             print("Exiting...")
             return
-        elif choice == "5":
+        elif choice == "6":
             clear()
             compare_algorithms()
             input("\nPress Enter to return to the menu...")
