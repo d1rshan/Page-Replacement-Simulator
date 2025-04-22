@@ -1,57 +1,33 @@
-## Objectives:
+#  Page Replacement Simulator with ML & Classic Algorithms
 
-Develop a memory management simulator to simulate various Page Replacement Algorithms: First In First Out (FIFO), Least Recently Used (LRU), Least Frequency Used (LFU), and Optimal algorithms.
+This project simulates and compares various **Page Replacement Algorithms** including classic techniques like **FIFO**, **LRU**, **LFU**, and a **Hybrid approach**, alongside a **Machine Learning-based algorithm**. It provides detailed analytics such as hit rate, fault rate, efficiency, and execution time — and even visualizes results with graphs and popup tables!
 
----
+## 📌 Features
 
-## Requirements:
+- ✅ Classic Algorithms: FIFO, LRU, LFU
+- ⚡ Hybrid Optimal Strategy
+- 🤖 ML-Based Algorithm using Decision Trees
+- 📊 Graphical Analysis of:
+  - Hit Rate vs Fault Rate
+  - Efficiency Comparison
+  - Execution Time
+- 🪟 Popup Table View for sequence and frames
+- 📝 Terminal-friendly and GUI integration
+- 🔍 Easily test different input sequences and frame sizes
 
-1. **Programming Language & Structure**:
-    - Implement the simulator using classes and data structures in any chosen programming language.
+## 🛠️ Technologies Used
 
-2. **User-Friendly Interface**:
-    - Create an intuitive interface allowing users to:
-        - Input parameters: Sequence of page references, frames in physical memory, and other relevant settings.
-        - Visualizations or output mechanisms: Display progression of page replacements and the physical memory state at each step for better comprehension.
-        - Logging: Record statistics (e.g., page hits, faults) to facilitate analysis and algorithm comparison.
+- Python 3.10+
+- `matplotlib` for visualizations
+- `tkinter` for GUI popups
+- `sklearn` for ML-based prediction
+- `tabulate` for terminal tables
+- Custom modules: `fifo.py`, `lru.py`, `lfu.py`, `hybrid.py`, `ml_based.py`, `input_taker.py`, `frames.py`
 
----
+## 🚀 Getting Started
 
-## Program Output:
+### Clone the Repository
 
-1. **Page Replacement Log**:
-    - Detailed log of each page replacement action: indicating replaced and newly brought pages into physical memory.
-
-2. **Memory State Visualization**:
-    - Visual representation illustrating memory state after each replacement: display pages in physical memory and their states (e.g., recently used, frequency counts).
-
-3. **Performance Metrics**:
-    - Clear presentation of key metrics like page hit percentage, fault percentage, and other relevant statistics.
-
-4. **Summary Statistics**:
-    - Aggregate statistics summarizing the overall performance of each page replacement algorithm.
-
-## Sequence Input Format:
-
-**Number of Page References**:
-- Number of page references in the sequence. 
-<br>
-
-**Sequence of Page References**:
-<br>
-
-- Sequence of page references (e.g., 1 2 3 4 1 2 5 1 2 3).
-<br>
-
-**Number of Frames in Physical Memory**:
-<br>
-
-- Number of frames in physical memory.
-
-**Example:**
-```
-10 (number of page references)
-1 2 3 4 1 2 5 1 2 3 (sequence of page references)
-3 (number of frames in physical memory)
-```
-
+```bash
+git clone https://github.com/your-username/page-replacement-simulator.git
+cd page-replacement-simulator
