@@ -1,4 +1,9 @@
 import frames as f
+import shutil
+term_width = shutil.get_terminal_size().columns
+chunk_size = max(5, (term_width - 15) // 6)
+
+
 
 
 class Page:
@@ -95,57 +100,70 @@ class Page:
 
     # Print methods
     def print_sequence(self):
-        print(f"+------------+", end="")
-        for page in self.page_sequence:
-            print("-----+", end="")
-        print(f"\n| \033[94mPCount: {self.page_count:<2}\033[0m |", end="")
-        for page in self.page_sequence:
-            print(f"  \033[94m{page:<3}\033[0m|", end="")
-        print(f"\n+------------+", end="")
-        for page in self.page_sequence:
-            print("-----+", end="")
+        chunk_size = 15
+        for chunk_start in range(0, len(self.page_sequence), chunk_size):
+            chunk_end = min(chunk_start + chunk_size, len(self.page_sequence))
+            chunk = self.page_sequence[chunk_start:chunk_end]
+
+            print(f"+------------+", end="")
+            for _ in chunk:
+                print("-----+", end="")
+            print(f"\n| \033[94mPCount: {self.page_count:<2}\033[0m |", end="")
+            for page in chunk:
+                print(f"  \033[94m{page:<3}\033[0m|", end="")
+            print(f"\n+------------+", end="")
+            for _ in chunk:
+                print("-----+", end="")
+            print()
 
     def print_frames(self):
-        for frame in self.frames:
-            print(f"\n| Frame {frame.get_frame_id()+1:<3}  |", end="")
-            i = 0
-            for event in frame.events:
-                if (event.get_event_type() == f.EventType.NOT_USED or event.get_event_data() == -1):
-                    print(f"  -  |", end="")
-                else:
-                    event_data = str(event.get_event_data())
-                    if event.get_event_data() == self.page_sequence[i]:
-                        if event.get_event_type() == f.EventType.PAGE_HIT:
-                            print(f" \033[92m {event_data:<3}\033[0m|", end="")
-                        elif event.get_event_type() == f.EventType.PAGE_FAULT or event.get_event_type() == f.EventType.PAGE_REPLACEMENT:
-                            print(f" \033[91m {event_data:<3}\033[0m|", end="")
+        chunk_size = 15
+        for chunk_start in range(0, len(self.page_sequence), chunk_size):
+            chunk_end = min(chunk_start + chunk_size, len(self.page_sequence))
+            for frame in self.frames:
+                print(f"\n| Frame {frame.get_frame_id()+1:<3}  |", end="")
+                for i in range(chunk_start, chunk_end):
+                    event = frame.events[i]
+                    if event.get_event_type() == f.EventType.NOT_USED or event.get_event_data() == -1:
+                        print(f"  -  |", end="")
                     else:
-                        event_data = str(event.get_event_data())
-                        print(f"  \033[0m{event_data:<3}\033[0m|", end="")
-                    
-                i += 1
+                        data = str(event.get_event_data())
+                        if event.get_event_data() == self.page_sequence[i]:
+                            if event.get_event_type() == f.EventType.PAGE_HIT:
+                                print(f" \033[92m {data:<3}\033[0m|", end="")
+                            elif event.get_event_type() in [f.EventType.PAGE_FAULT, f.EventType.PAGE_REPLACEMENT]:
+                                print(f" \033[91m {data:<3}\033[0m|", end="")
+                        else:
+                            print(f"  {data:<3}|", end="")
+                print(f"\n+------------+", end="")
+                for _ in range(chunk_start, chunk_end):
+                    print("-----+", end="")
+
+            # Page Faults row
+            print(f"\n| \033[91mPage F: {self.get_page_faults():<2}\033[0m |", end="")
+            for i in range(chunk_start, chunk_end):
+                event = self.frames[0].events[i]
+                if event.get_event_type() in [f.EventType.PAGE_FAULT, f.EventType.PAGE_REPLACEMENT]:
+                    print(f" \033[91m F \033[0m |", end="")
+                else:
+                    print(f"  -  |", end="")
             print(f"\n+------------+", end="")
-            for event in frame.events:
+            for _ in range(chunk_start, chunk_end):
                 print("-----+", end="")
 
-        print(f"\n| \033[91mPage F: {self.get_page_faults():<2}\033[0m |", end="")
-        for events in self.frames[0].events:
-            if events.get_event_type() == f.EventType.PAGE_FAULT or events.get_event_type() == f.EventType.PAGE_REPLACEMENT:
-                print(f" \033[91m F \033[0m |", end="")
-            else:
-                print(f"  -  |", end="")
-        print(f"\n+------------+", end="")
-        for event in self.frames[0].events:
-            print("-----+", end="")
-        print(f"\n| \033[92mPage H: {self.get_page_hits():<2}\033[0m |", end="")
-        for events in self.frames[0].events:
-            if events.get_event_type() == f.EventType.PAGE_HIT:
-                print(f" \033[92m H \033[0m |", end="")
-            else:
-                print(f"  -  |", end="")
-        print(f"\n+------------+", end="")
-        for event in self.frames[0].events:
-            print("-----+", end="")
+            # Page Hits row
+            print(f"\n| \033[92mPage H: {self.get_page_hits():<2}\033[0m |", end="")
+            for i in range(chunk_start, chunk_end):
+                event = self.frames[0].events[i]
+                if event.get_event_type() == f.EventType.PAGE_HIT:
+                    print(f" \033[92m H \033[0m |", end="")
+                else:
+                    print(f"  -  |", end="")
+            print(f"\n+------------+", end="")
+            for _ in range(chunk_start, chunk_end):
+                print("-----+", end="")
+            print()
+
 
     def print_rates(self):
         fault_rate = "{:.2f}%".format(self.get_page_fault_rate()*100)
