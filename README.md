@@ -31,3 +31,10 @@ This project simulates and compares various **Page Replacement Algorithms** incl
 ```bash
 git clone https://github.com/your-username/page-replacement-simulator.git
 cd page-replacement-simulator
+```
+### To Run
+
+```bash
+cd classes
+python main.py
+```
